@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="JavaChess">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/guava-23.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/google-collect-snapshot-20071022.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

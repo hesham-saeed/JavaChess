@@ -9,13 +9,13 @@ import java.util.Collection;
 import java.util.List;
 
 public class BoardMemento {
-    private final List<Tile> gameBoard;
-    private final Collection<Piece> whitePieces;
-    private final Collection<Piece> blackPieces;
+    private List<Tile> gameBoard;
+    private Collection<Piece> whitePieces;
+    private Collection<Piece> blackPieces;
 
-    private final WhitePlayer whitePlayer;
-    private final BlackPlayer blackPlayer;
-    private final Player currentPlayer;
+    private WhitePlayer whitePlayer;
+    private BlackPlayer blackPlayer;
+    private Player currentPlayer;
 
     public BoardMemento(List<Tile> gameBoard,
                         Collection<Piece> whitePieces,

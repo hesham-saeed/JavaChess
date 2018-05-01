@@ -148,11 +148,11 @@ public class Board {
     }
 
     public void getStateFromMemento(BoardMemento boardMemento){
-        gameBoard = boardMemento.getGameBoard();
-        whitePieces = boardMemento.getWhitePieces();
-        blackPieces = boardMemento.getBlackPieces();
-        whitePlayer = boardMemento.getWhitePlayer();
-        blackPlayer = boardMemento.getBlackPlayer();
-        currentPlayer = boardMemento.getCurrentPlayer();
+        this.gameBoard = boardMemento.getGameBoard();
+        this.whitePieces = boardMemento.getWhitePieces();
+        this.blackPieces = boardMemento.getBlackPieces();
+        this.whitePlayer = boardMemento.getWhitePlayer();
+        this.blackPlayer = boardMemento.getBlackPlayer();
+        this.currentPlayer = boardMemento.getCurrentPlayer();
     }
 }

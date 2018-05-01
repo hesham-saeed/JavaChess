@@ -1,6 +1,7 @@
 package com.chess.engine.gui;
 
 import com.chess.engine.board.Board;
+import com.chess.engine.board.BoardMemento;
 import com.chess.engine.board.CareTaker;
 import com.google.common.collect.Lists;
 
@@ -94,7 +95,9 @@ public class BoardGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CareTaker careTaker = CareTaker.getInstance();
+                //BoardMemento b = CareTaker.getInstance().getLastMemento();
                 chessBoard.getStateFromMemento(careTaker.getLastMemento());
+                TilePanel.chessBoard = chessBoard;
                 boardPanel.drawBoard(chessBoard);
             }
         });

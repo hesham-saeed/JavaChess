@@ -21,7 +21,7 @@ public class TilePanel extends JPanel {
     private static final String ICONS_ROOT_PATH = "art/simple/";
     private final Color lightTileColor = Color.decode("#FFFACD");
     private final Color darkTileColor = Color.decode("#593E1A");
-    private static Board chessBoard;
+    public static Board chessBoard;
     //private BoardDirection boardDirection;
     private BoardPanel boardPanel;
 

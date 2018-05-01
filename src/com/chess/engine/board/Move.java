@@ -36,7 +36,8 @@ public abstract class Move {
             return false;
         }
         final Move otherMove = (Move) other;
-        return getDestinationCoordinate() == otherMove.getDestinationCoordinate() &&
+        return getCurrentCoordinate() == otherMove.getCurrentCoordinate() &&
+                getDestinationCoordinate() == otherMove.getDestinationCoordinate() &&
                 getMovedPiece().equals(otherMove.getMovedPiece());
     }
 
@@ -51,7 +52,7 @@ public abstract class Move {
     public Board execute() {
         final Builder builder = new Builder();
         for(final Piece piece : this.board.currentPlayer().getActivePieces()) {
-            if(this.movedPiece.equals(piece)) {
+            if(!this.movedPiece.equals(piece)) {
                 builder.setPiece(piece);
             }
         }

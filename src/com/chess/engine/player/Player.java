@@ -93,7 +93,7 @@ public abstract class Player {
             return new MoveTransition(this.board, move, MoveStatus.LEVAES_PLAYER_IN_CHECK);
         }
 
-        return null;
+        return new MoveTransition(transsitionBoard, move, MoveStatus.DONE);
     }
 
     public abstract Player getOpponent();

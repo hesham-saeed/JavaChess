@@ -13,8 +13,12 @@ import com.chess.engine.board.*;
 	private final static int[] CANDIDATE_MOVE_VECTOR_COORDENATES = {-8, -1, 1, 8};
 	
 	public Rook(final Alliance pieceAlliance, final int piecePostion) {
-		super(PieceType.ROOK, pieceAlliance, piecePostion);
+		super(PieceType.ROOK, pieceAlliance, piecePostion,true);
 	}
+
+	 public Rook(final Alliance pieceAlliance, final int piecePostion, final boolean isFirstMove) {
+		 super(PieceType.ROOK, pieceAlliance, piecePostion, isFirstMove);
+	 }
 
 	@Override
 	public List<Move> calculateLegalMoves(final Board board) {

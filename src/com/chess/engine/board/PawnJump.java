@@ -3,7 +3,7 @@ package com.chess.engine.board;
 import com.chess.engine.pieces.*;
 
 public class PawnJump extends Move {
-    protected PawnJump(Board board, Piece movedPiece, int destinationCoordinate) {
+    public PawnJump(Board board, Piece movedPiece, int destinationCoordinate) {
         super(board, movedPiece, destinationCoordinate);
     }
 

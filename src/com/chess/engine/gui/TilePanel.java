@@ -1,9 +1,6 @@
 package com.chess.engine.gui;
 
-import com.chess.engine.board.Board;
-import com.chess.engine.board.Move;
-import com.chess.engine.board.MoveFactory;
-import com.chess.engine.board.Tile;
+import com.chess.engine.board.*;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.player.MoveTransition;
 
@@ -94,14 +91,15 @@ public class TilePanel extends JPanel {
                 else
                 {
                     destinationTile = chessBoard.getTile(tileCoordinate);
-                    System.out.println("" + sourceTile.getTileCoordinate() + "," + destinationTile.getTileCoordinate());
+                    //System.out.println("" + sourceTile.getTileCoordinate() + "," + destinationTile.getTileCoordinate());
                     Move move = MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
                     final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
                     if (transition.getMoveStatus().isDone()){
-                        System.out.println(chessBoard);
-                        TilePanel.this.chessBoard = transition.getTransitionBoard();
-
-                        System.out.println(" new Chess board:\n" + chessBoard);
+                        //System.out.println(chessBoard);
+                        //TilePanel.this.chessBoard = transition.getTransitionBoard();
+                        CareTaker.getInstance().add(chessBoard.saveMemento());
+                        chessBoard = transition.getTransitionBoard();
+                        //System.out.println(" new Chess board:\n" + chessBoard);
                     }
                     sourceTile = null;
                     destinationTile = null;

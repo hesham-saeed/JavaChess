@@ -1,6 +1,7 @@
 package com.chess.engine.gui;
 
 import com.chess.engine.board.Board;
+import com.chess.engine.board.CareTaker;
 import com.google.common.collect.Lists;
 
 import javax.swing.*;
@@ -88,7 +89,7 @@ public class BoardGUI {
 
         preferencesMenu.add(cbLegalMoveHighlighter);
 
-        /*final JMenuItem undoActionMenuItem = new JMenuItem("Undo last move");
+        final JMenuItem undoActionMenuItem = new JMenuItem("Undo last move");
         undoActionMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -97,7 +98,7 @@ public class BoardGUI {
                 boardPanel.drawBoard(chessBoard);
             }
         });
-        preferencesMenu.add(undoActionMenuItem);*/
+        preferencesMenu.add(undoActionMenuItem);
 
         return preferencesMenu;
     }

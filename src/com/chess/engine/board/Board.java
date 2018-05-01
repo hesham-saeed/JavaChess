@@ -11,13 +11,13 @@ import com.google.common.collect.Iterables;
 
 public class Board {
 
-    private final List<Tile> gameBoard;
-    private final Collection<Piece> whitePieces;
-    private final Collection<Piece> blackPieces;
+    private List<Tile> gameBoard;
+    private Collection<Piece> whitePieces;
+    private Collection<Piece> blackPieces;
 
-    private final WhitePlayer whitePlayer;
-    private final BlackPlayer blackPlayer;
-    private final Player currentPlayer;
+    private WhitePlayer whitePlayer;
+    private BlackPlayer blackPlayer;
+    private Player currentPlayer;
 
 
     Board(final Builder builder){
@@ -141,5 +141,18 @@ public class Board {
 
     public Player whitePlayer() {
         return this.whitePlayer;
+    }
+
+    public BoardMemento saveMemento(){
+        return new BoardMemento(gameBoard, whitePieces, blackPieces,whitePlayer,blackPlayer,currentPlayer);
+    }
+
+    public void getStateFromMemento(BoardMemento boardMemento){
+        gameBoard = boardMemento.getGameBoard();
+        whitePieces = boardMemento.getWhitePieces();
+        blackPieces = boardMemento.getBlackPieces();
+        whitePlayer = boardMemento.getWhitePlayer();
+        blackPlayer = boardMemento.getBlackPlayer();
+        currentPlayer = boardMemento.getCurrentPlayer();
     }
 }

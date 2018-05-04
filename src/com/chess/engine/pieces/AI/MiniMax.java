@@ -1,4 +1,4 @@
-/*package com.chess.engine.pieces.AI;
+package com.chess.engine.pieces.AI;
 
 import com.chess.engine.board.*;
 import com.chess.engine.player.MoveTransition;
@@ -10,7 +10,6 @@ public class MiniMax implements MoveStrategy {
 
     public MiniMax (final int searchDepth) {
 
-        boardEvaluator = null;
         this.searchDepth = searchDepth;
     }
 
@@ -35,7 +34,7 @@ public class MiniMax implements MoveStrategy {
             final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
             if(moveTransition.getMoveStatus().isDone()) {
 
-                currentValue = board.currentPlayer().getActivePieces().isWhite()?
+                currentValue = board.currentPlayer().getAlliance().isWhite()?
                         min(moveTransition.getTransitionBoard(), this.searchDepth - 1) :
                         max(moveTransition.getTransitionBoard(), this.searchDepth - 1);
                 if(board.currentPlayer().getAlliance().isWhite() && currentValue >= highestSeenValue) {
@@ -63,7 +62,7 @@ public class MiniMax implements MoveStrategy {
         for (final Move move : board.currentPlayer().getLegalMoves()) {
             final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
             if (moveTransition.getMoveStatus().isDone()) {
-                final int currentValue = max(moveTransition.getTransitionBoard, depth - 1);
+                final int currentValue = max(moveTransition.getTransitionBoard(), depth - 1);
                 if (currentValue <= lowestSeenValue) {
                     lowestSeenValue = currentValue;
                 }
@@ -81,7 +80,7 @@ public class MiniMax implements MoveStrategy {
         for (final Move move : board.currentPlayer().getLegalMoves()) {
             final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
             if (moveTransition.getMoveStatus().isDone()) {
-                final int currentValue = min(moveTransition.getTransitionBoard, depth - 1);
+                final int currentValue = min(moveTransition.getTransitionBoard(), depth - 1);
                 if (currentValue >= highestSeenValue) {
                     highestSeenValue = currentValue;
                 }
@@ -95,4 +94,3 @@ public class MiniMax implements MoveStrategy {
                 board.currentPlayer().isInStaleMate();
     }
 }
-*/

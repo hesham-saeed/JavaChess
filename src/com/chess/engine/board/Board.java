@@ -19,12 +19,13 @@ public class Board {
     private BlackPlayer blackPlayer;
     private Player currentPlayer;
 
+    private final Pawn enPassantPawn;
 
     Board(final Builder builder){
         this.gameBoard = createGameBoard(builder);
         this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calculateActivePieces(this.gameBoard, Alliance.BLACK);
-
+        this.enPassantPawn = builder.enPassantPawn;
         final Collection<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
         final Collection<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
 
@@ -91,7 +92,6 @@ public class Board {
     }
     public static Board createStandardBoard(){
         final Builder builder = new Builder();
-        builder.setPiece(new Bishop(Alliance.BLACK, 0));
         builder.setPiece(new Rook(Alliance.BLACK, 0));
         builder.setPiece(new Knight(Alliance.BLACK, 1));
         builder.setPiece(new Bishop(Alliance.BLACK, 2));
@@ -108,7 +108,7 @@ public class Board {
         builder.setPiece(new Pawn(Alliance.BLACK, 13));
         builder.setPiece(new Pawn(Alliance.BLACK, 14));
         builder.setPiece(new Pawn(Alliance.BLACK, 15));
-       
+        // White Layout
         builder.setPiece(new Pawn(Alliance.WHITE, 48));
         builder.setPiece(new Pawn(Alliance.WHITE, 49));
         builder.setPiece(new Pawn(Alliance.WHITE, 50));
@@ -145,6 +145,10 @@ public class Board {
 
     public BoardMemento saveMemento(){
         return new BoardMemento(gameBoard, whitePieces, blackPieces,whitePlayer,blackPlayer,currentPlayer);
+    }
+
+    public Pawn getEnPassantPawn(){
+        return this.enPassantPawn;
     }
 
     public void getStateFromMemento(BoardMemento boardMemento){

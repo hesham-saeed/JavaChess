@@ -79,6 +79,11 @@ public abstract class Move {
         return builder.build();
     }
 
+    public Board getBoard()
+    {
+        return this.board;
+    }
+
     public Piece getMovedPiece() {
         return this.movedPiece;
     }

@@ -11,7 +11,7 @@ public class Queen extends Piece{
 
 	
 	private final static int[] CANDIDATE_MOVE_VECTOR_COORDENATES = {-9, -8, -7, -1, 1, 7, 8, 9};
-	private int piecePostion;
+
 	
 	public Queen(final Alliance pieceAlliance, final int piecePostion) {
 		super(PieceType.QUEEN, pieceAlliance, piecePostion, true);
@@ -25,46 +25,39 @@ public class Queen extends Piece{
 
 	@Override
 	public List<Move> calculateLegalMoves(final Board board) {
-		
+
 		final List<Move> legalMoves = new ArrayList<>();
-		
+
 		for (final int candidateCoordinateOffset: CANDIDATE_MOVE_VECTOR_COORDENATES) {
-			
-			int candidateDestinationCoordinate = this.piecePostion;
-			
+			int candidateDestinationCoordinate = this.piecePosition;
 			while(BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
-					
 				if(isFirstColumnExclusion(candidateDestinationCoordinate, candidateCoordinateOffset) || isEighthColumnExclusion(candidateDestinationCoordinate, candidateCoordinateOffset)) {
 					break;
 				}
-				 
-				
 				candidateDestinationCoordinate += candidateCoordinateOffset;
-				
-				if(BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
-					
+				if (!BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
+					break;
+				}
+				else{
 					final Tile candidtaeDestinatioTile = board.getTile(candidateDestinationCoordinate);
-					
-					if(!candidtaeDestinatioTile.isTileOccupied()) {	
+					if(!candidtaeDestinatioTile.isTileOccupied()) {
 						legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
-					} 
+					}
 					else {
-						
 						final Piece pieceAtDestination = candidtaeDestinatioTile.getPiece();
 						final Alliance pieceAlliance =  pieceAtDestination.getPieceAlliance();
-						
 						if(this.pieceAlliance != pieceAlliance)
 						{
-							legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination)) ;
+							legalMoves.add(new MajorAttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination)) ;
 						}
-						
+
 						break;
 					}
 				}
 			}
 		}
-		
-		
+
+
 		return Collections.unmodifiableList(legalMoves);
 	}
 	

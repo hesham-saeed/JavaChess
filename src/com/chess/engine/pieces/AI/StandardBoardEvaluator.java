@@ -1,4 +1,4 @@
-/*package com.chess.engine.pieces.AI;
+package com.chess.engine.pieces.AI;
 
 import com.chess.engine.board.*;
 import com.chess.engine.player.*;
@@ -49,4 +49,3 @@ public final class StandardBoardEvaluator implements BoardEvaluator {
         return pieceValueScore;
     }
 }
-*/

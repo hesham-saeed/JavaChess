@@ -10,10 +10,6 @@ public class AttackMove extends Move{
             this.attackedPiece = attackedPiece;
         }
 
-    @Override
-    public Board execute() {
-        return null;
-    }
 
     @Override
     public boolean isAttack() {

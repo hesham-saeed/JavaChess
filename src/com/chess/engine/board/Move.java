@@ -6,6 +6,7 @@ public abstract class Move {
     final Board board;
     final Piece movedPiece;
     final int destinationCoordinate;
+    protected final boolean isFirstMove;
 
     public static final Move NULL_MOVE = new NullMove();
 
@@ -15,6 +16,16 @@ public abstract class Move {
         this.board = board;
         this.movedPiece = movedPiece;
         this.destinationCoordinate = destinationCoordinate;
+        this.isFirstMove = movedPiece.isFirstMove();
+
+    }
+
+    protected Move(final Board board,
+                   final int destinationCoordinate){
+        this.board = board;
+        this.movedPiece = null;
+        this.destinationCoordinate = destinationCoordinate;
+        this.isFirstMove = false;
 
     }
 
@@ -24,6 +35,7 @@ public abstract class Move {
         int result = 1;
         result = prime * result + this.destinationCoordinate;
         result = prime * result + this.movedPiece.hashCode();
+        result = prime * result + this.movedPiece.getPiecePosition();
         return result;
     }
 
@@ -46,10 +58,10 @@ public abstract class Move {
     }
 
     public int getCurrentCoordinate() {
-        return this.movedPiece.getPiecePosition();
+        return this.getMovedPiece().getPiecePosition();
     }
 
-    public Board execute() {
+    public    Board execute(){
         final Builder builder = new Builder();
         for(final Piece piece : this.board.currentPlayer().getActivePieces()) {
             if(!this.movedPiece.equals(piece)) {

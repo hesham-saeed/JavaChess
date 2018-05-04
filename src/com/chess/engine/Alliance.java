@@ -4,7 +4,7 @@ import com.chess.engine.player.BlackPlayer;
 import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
 
-public enum Alliance {
+public enum  Alliance {
 	WHITE
 	{
 		@Override

@@ -5,18 +5,18 @@ import com.chess.engine.pieces.*;
 public class CastleMove extends Move {
 
     protected final Rook castleRook;
-    protected final int castleRookStar;
+    protected final int castleRookStart ;
     protected final int castleRookDestination;
 
 
     protected CastleMove(Board board, Piece movedPiece,
                          int destinationCoordinate,
                          final Rook castleRook,
-                         final int castleRookStar,
+                         final int castleRookStart,
                          final int castleRookDestination) {
         super(board, movedPiece, destinationCoordinate);
         this.castleRook = castleRook;
-        this.castleRookStar = castleRookStar;
+        this.castleRookStart = castleRookStart;
         this.castleRookDestination = castleRookDestination;
     }
 
@@ -44,5 +44,26 @@ public class CastleMove extends Move {
         builder.setPiece(new Rook(this.castleRook.getPieceAlliance(), this.castleRookDestination));
         builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
         return builder.build();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + this.castleRook.hashCode();
+        result = prime * result + this.castleRookDestination;
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof CastleMove)) {
+            return false;
+        }
+        final CastleMove otherCastleMove = (CastleMove) other;
+        return super.equals(otherCastleMove) && this.castleRook.equals(otherCastleMove.getCastleRook());
     }
 }

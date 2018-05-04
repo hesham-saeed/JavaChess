@@ -2,7 +2,7 @@ package com.chess.engine.player;
 
 import com.chess.engine.board.Move;
 
-public enum MoveStatus {
+public enum   MoveStatus {
     DONE {
         @Override
         public boolean isDone() {
@@ -14,7 +14,7 @@ public enum MoveStatus {
         public boolean isDone() {
             return false;
         }
-    }, LEVAES_PLAYER_IN_CHECK {
+    }, LEAVES_PLAYER_IN_CHECK {
         @Override
         public boolean isDone() {
             return false;

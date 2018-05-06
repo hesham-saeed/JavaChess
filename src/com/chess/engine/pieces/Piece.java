@@ -1,5 +1,6 @@
 package com.chess.engine.pieces;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.*;
 
 
-public abstract class Piece {
+public abstract class Piece implements Serializable {
 
     protected final PieceType pieceType;
     protected final int piecePosition;

@@ -2,7 +2,9 @@ package com.chess.engine.board;
 
 import com.chess.engine.pieces.Piece;
 
-public abstract class Move {
+import java.io.Serializable;
+
+public abstract class Move implements Serializable {
     final Board board;
     final Piece movedPiece;
     final int destinationCoordinate;

@@ -2,6 +2,7 @@ package com.chess.engine.board;
 
 
 
+import java.io.Serializable;
 import java.util.*;
 import com.chess.engine.pieces.*;
 import com.chess.engine.*;
@@ -9,7 +10,7 @@ import com.chess.engine.player.* ;
 import com.google.common.collect.Iterables;
 //import com.chess.engine.player.WhitePlayer;
 
-public class Board {
+public class Board implements Serializable {
 
     private List<Tile> gameBoard;
     private Collection<Piece> whitePieces;

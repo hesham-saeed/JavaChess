@@ -3,7 +3,6 @@ package com.chess.engine.gui;
 import com.chess.engine.board.*;
 import sun.audio.*;
 
-import javax.sound.midi.SysexMessage;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -13,18 +12,7 @@ public class Game {
     AudioData audioData;
     ContinuousAudioDataStream audioLoop;
 
-
-    public void toggleMusic() {
-        if (musicOn)
-            AudioPlayer.player.start(audioLoop);
-        else
-            AudioPlayer.player.stop(audioLoop);
-
-
-        musicOn = !musicOn;
-    }
-
-    private BoardGUI boardGUI;
+    private Table table;
     private final MoveLog moveLog;
 
     private static Game sGame;
@@ -40,7 +28,6 @@ public class Game {
         moveLog = new MoveLog();
         initializeGame();
     }
-
 
     private class moveMusic implements Runnable{
 
@@ -68,13 +55,15 @@ public class Game {
     }
 
     public void redrawBoard(Board chessBoard){
-        boardGUI.getBoardPanel().drawBoard(chessBoard);
-        boardGUI.getGameHistoryPanel().redo(chessBoard, moveLog);
-        boardGUI.getTakenPiecesPanel().redo(moveLog);
+        table.setChessBoard(chessBoard);
+        table.getBoardPanel().drawBoard(chessBoard);
+        table.getGameHistoryPanel().redo(chessBoard, moveLog);
+        table.getTakenPiecesPanel().redo(moveLog);
     }
 
     public void initializeGame(){
-        boardGUI = new BoardGUI();
+        //chessBoard = Board.createStandardBoard();
+        table = new Table();
         try {
 
             audioStream = new AudioStream(new FileInputStream("guitarup_full.wav"));
@@ -86,6 +75,17 @@ public class Game {
         }
 
 
+    }
+
+
+    public void toggleMusic() {
+        if (musicOn)
+            AudioPlayer.player.start(audioLoop);
+        else
+            AudioPlayer.player.stop(audioLoop);
+
+
+        musicOn = !musicOn;
     }
 
 }

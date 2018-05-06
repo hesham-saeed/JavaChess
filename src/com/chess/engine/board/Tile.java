@@ -1,13 +1,14 @@
 package com.chess.engine.board;
 
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.chess.engine.pieces.Piece;
 
-public abstract class Tile {
+public abstract class Tile implements Serializable {
     protected final int tileCoordinate;
 
     private static final Map<Integer, EmptyTile> EMPTY_TILES = createAllPossibleEmptyTiles();

@@ -1,7 +1,5 @@
 package com.chess.engine;
 
-import com.chess.engine.board.*;
-import com.chess.engine.gui.BoardGUI;
 import com.chess.engine.gui.Game;
 
 public class JChess {

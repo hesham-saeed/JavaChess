@@ -12,6 +12,17 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class BoardGUI {
+    public GameHistoryPanel getGameHistoryPanel() {
+        return gameHistoryPanel;
+    }
+
+    public TakenPiecesPanel getTakenPiecesPanel() {
+        return takenPiecesPanel;
+    }
+
+    public BoardPanel getBoardPanel() {
+        return boardPanel;
+    }
 
     private final JFrame gameFrame;
     private final GameHistoryPanel gameHistoryPanel;
@@ -97,15 +108,34 @@ public class BoardGUI {
 
         preferencesMenu.add(cbLegalMoveHighlighter);
 
+        preferencesMenu.addSeparator();
+
+        final JCheckBoxMenuItem toggleMusic = new JCheckBoxMenuItem(
+                "Play Music", false);
+
+        toggleMusic.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                Game.getInstance().toggleMusic();
+            }
+        });
+
+        preferencesMenu.add(toggleMusic);
+
+
+
         final JMenuItem undoActionMenuItem = new JMenuItem("Undo last move");
         undoActionMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CareTaker careTaker = CareTaker.getInstance();
+                if (!careTaker.emptyMemento()){
+                    chessBoard.getStateFromMemento(careTaker.getLastMemento());
+                    TilePanel.chessBoard = chessBoard;
+                    boardPanel.drawBoard(chessBoard);
+                }
                 //BoardMemento b = CareTaker.getInstance().getLastMemento();
-                chessBoard.getStateFromMemento(careTaker.getLastMemento());
-                TilePanel.chessBoard = chessBoard;
-                boardPanel.drawBoard(chessBoard);
+
             }
         });
         preferencesMenu.add(undoActionMenuItem);

@@ -61,7 +61,7 @@ public abstract class Move {
         return this.getMovedPiece().getPiecePosition();
     }
 
-    public    Board execute(){
+    public Board execute(){
         final Builder builder = new Builder();
         for(final Piece piece : this.board.currentPlayer().getActivePieces()) {
             if(!this.movedPiece.equals(piece)) {

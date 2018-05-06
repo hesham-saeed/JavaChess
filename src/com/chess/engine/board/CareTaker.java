@@ -31,4 +31,7 @@ public class CareTaker {
         }
         return null;
     }
+    public boolean emptyMemento(){
+        return mementoList.size() == 0;
+    }
 }

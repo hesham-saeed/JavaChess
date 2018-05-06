@@ -49,30 +49,8 @@ public class TilePanel extends JPanel {
         validate();
     }
 
-    private void setTileBackgroundColor() {
-        if ((tileCoordinate / 8 ) % 2 == 0){
-            setBackground(tileCoordinate % 2 == 0 ? lightTileColor : darkTileColor);
-        }
-        else {
-            setBackground(tileCoordinate % 2 == 0 ? darkTileColor : lightTileColor);
-        }
-    }
-
-    private void setTileIcon(final Board board){
-        this.removeAll();
-        if (board.getTile(this.tileCoordinate).isTileOccupied()){
-            try {
-                final BufferedImage image =
-                        ImageIO.read(new File(ICONS_ROOT_PATH
-                                + board.getTile(this.tileCoordinate).getPiece()
-                                .getPieceAlliance().toString().substring(0,1)
-                                + board.getTile(this.tileCoordinate).getPiece().toString() + ".gif"));
-                this.add(new JLabel(new ImageIcon(image)));
-            }
-            catch (IOException e ){
-                e.printStackTrace();
-            }
-        }
+    public static void setChessBoard(Board chessBoard){
+        TilePanel.chessBoard = chessBoard;
     }
 
     public class myMouseListener implements MouseListener {
@@ -88,31 +66,34 @@ public class TilePanel extends JPanel {
                         sourceTile = null;
                     }
                 }
-                else
-                {
+                else {
                     destinationTile = chessBoard.getTile(tileCoordinate);
                     //System.out.println("" + sourceTile.getTileCoordinate() + "," + destinationTile.getTileCoordinate());
-                    Move move = MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
+
+                    final Move move = MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(),
+                                                             destinationTile.getTileCoordinate());
+
                     final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
-                    if (transition.getMoveStatus().isDone()){
-                        //System.out.println(chessBoard);
-                        //TilePanel.this.chessBoard = transition.getTransitionBoard();
+
+                    if (transition.getMoveStatus().isDone()) {
+                        Game.getInstance().addMoveToLog(move);
+                        Game.getInstance().playMoveMusic();
                         CareTaker.getInstance().add(chessBoard.saveMemento());
                         chessBoard = transition.getTransitionBoard();
-                        //System.out.println(" new Chess board:\n" + chessBoard);
                     }
                     sourceTile = null;
                     destinationTile = null;
                     humanMovedPiece = null;
 
                 }
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Game.getInstance().redrawBoard(chessBoard);
+                    }
+                });
             }
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    boardPanel.drawBoard(chessBoard);
-                }
-            });
+
 
         }
 
@@ -137,12 +118,40 @@ public class TilePanel extends JPanel {
         }
     }
 
+
+
     public void drawTile(Board chessBoard){
         setTileBackgroundColor();
         setTileIcon(chessBoard);
         highlightLegals(chessBoard);
         validate();
         repaint();
+    }
+
+    private void setTileBackgroundColor() {
+        if ((tileCoordinate / 8 ) % 2 == 0){
+            setBackground(tileCoordinate % 2 == 0 ? lightTileColor : darkTileColor);
+        }
+        else {
+            setBackground(tileCoordinate % 2 == 0 ? darkTileColor : lightTileColor);
+        }
+    }
+
+    private void setTileIcon(final Board board){
+        this.removeAll();
+        if (board.getTile(this.tileCoordinate).isTileOccupied()){
+            try {
+                final BufferedImage image =
+                        ImageIO.read(new File(ICONS_ROOT_PATH
+                                + board.getTile(this.tileCoordinate).getPiece()
+                                .getPieceAlliance().toString().substring(0,1)
+                                + board.getTile(this.tileCoordinate).getPiece().toString() + ".gif"));
+                this.add(new JLabel(new ImageIcon(image)));
+            }
+            catch (IOException e ){
+                e.printStackTrace();
+            }
+        }
     }
 
     private void highlightLegals(final Board board) {

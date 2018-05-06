@@ -12,13 +12,12 @@ public class BoardPanel extends JPanel {
     final List<TilePanel> boardTiles;
     //private Board chessBoard;
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400,400);
-    BoardPanel(Board board){
+    BoardPanel(Board chessBoard){
         super(new GridLayout(8,8));
-        //this.chessBoard = board;
         this.boardTiles = new ArrayList<>();
 
         for (int i = 0; i< BoardUtils.NUM_TILES; i++){
-            TilePanel tilePanel = new TilePanel(this, i, board);
+            TilePanel tilePanel = new TilePanel(this, i, chessBoard);
             this.boardTiles.add(tilePanel);
             this.add(tilePanel);
         }
@@ -28,7 +27,7 @@ public class BoardPanel extends JPanel {
 
     public void drawBoard(Board chessBoard) {
         removeAll();
-        for (final TilePanel tilePanel: BoardGUI.boardDirection.traverse(boardTiles)){
+        for (final TilePanel tilePanel: Table.boardDirection.traverse(boardTiles)){
             tilePanel.drawTile(chessBoard);
             add(tilePanel);
         }

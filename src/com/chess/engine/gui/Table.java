@@ -3,6 +3,7 @@ package com.chess.engine.gui;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardMemento;
 import com.chess.engine.board.CareTaker;
+import com.chess.engine.board.GameSaver;
 import com.google.common.collect.Lists;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class BoardGUI {
+public class Table {
     public GameHistoryPanel getGameHistoryPanel() {
         return gameHistoryPanel;
     }
@@ -28,19 +29,18 @@ public class BoardGUI {
     private final GameHistoryPanel gameHistoryPanel;
     private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
-    private final Board chessBoard;
+    Board chessBoard;
     public static BoardDirection boardDirection;
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(800,800);
     public static boolean highlightLegalMoves;
 
-    public BoardGUI(){
-        chessBoard=Board.createStandardBoard();
-
+    public Table(){
         this.gameFrame = new JFrame("Chess");
         final JMenuBar tableMenuBar = createTableMenuBar();
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         boardDirection=BoardDirection.NORMAL;
+        chessBoard = Board.createStandardBoard();
         this.gameHistoryPanel = new GameHistoryPanel();
         this.takenPiecesPanel = new TakenPiecesPanel();
         this.boardPanel = new BoardPanel(chessBoard);
@@ -57,17 +57,37 @@ public class BoardGUI {
         return tableMenuBar;
     }
 
+    public void setChessBoard(Board chessBoard) {
+        this.chessBoard = chessBoard;
+    }
 
     private JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("File");
-        final JMenuItem openPGN = new JMenuItem("load PGN File");
-        openPGN.addActionListener(new ActionListener() {
+        final JMenuItem saveGame = new JMenuItem("Save game");
+        saveGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("open up that pgn file!");
+                GameSaver.saveGame(chessBoard);
+
             }
         });
-        fileMenu.add(openPGN);
+        fileMenu.add(saveGame);
+
+
+        final JMenuItem loadGame = new JMenuItem("Load Game");
+        loadGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Board loadedBoard = GameSaver.loadGame();
+                chessBoard = loadedBoard;
+                TilePanel.setChessBoard(chessBoard);
+                //chessBoard = GameSaver.loadGame();
+                Game.getInstance().redrawBoard(chessBoard);
+
+            }
+        });
+        fileMenu.add(loadGame);
+
 
 
         final JMenuItem exitMenuItem = new JMenuItem("Exit");

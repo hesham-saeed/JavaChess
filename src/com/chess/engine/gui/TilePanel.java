@@ -155,7 +155,7 @@ public class TilePanel extends JPanel {
     }
 
     private void highlightLegals(final Board board) {
-        if (BoardGUI.highlightLegalMoves) {
+        if (Table.highlightLegalMoves) {
             for (final Move move : pieceLegalMoves(board)) {
                 if (move.getDestinationCoordinate() == this.tileCoordinate) {
                     try {

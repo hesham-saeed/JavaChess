@@ -14,4 +14,8 @@ public class JChess {
     public static void test(){
 
     }
+
+    public static void test2(){
+
+    }
 }

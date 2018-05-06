@@ -46,6 +46,7 @@ public class BoardGUI {
         return tableMenuBar;
     }
 
+
     private JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("File");
         final JMenuItem openPGN = new JMenuItem("load PGN File");

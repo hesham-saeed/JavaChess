@@ -16,7 +16,7 @@ public class JChess {
 
     }
 
-    public static void t3(){
+    public static void testt3(){
 
     }
 }

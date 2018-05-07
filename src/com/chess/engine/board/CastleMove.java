@@ -41,7 +41,7 @@ public class CastleMove extends Move {
             builder.setPiece(piece);
         }
         builder.setPiece(this.movedPiece.movePiece(this));
-        builder.setPiece(new Rook(this.castleRook.getPieceAlliance(), this.castleRookDestination));
+        builder.setPiece(PieceFactoryMaker.getInstance().choosePieceType(Piece.PieceType.ROOK, this.castleRook.getPieceAlliance(), this.castleRookDestination, true));
         builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
         return builder.build();
     }

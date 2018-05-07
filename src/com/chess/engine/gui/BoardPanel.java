@@ -10,7 +10,6 @@ import java.util.List;
 
 public class BoardPanel extends JPanel {
     final List<TilePanel> boardTiles;
-    //private Board chessBoard;
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400,400);
     BoardPanel(Board chessBoard){
         super(new GridLayout(8,8));

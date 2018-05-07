@@ -20,7 +20,11 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutionException;
 
-public class Table extends Observable {
+public class Table extends Observable{
+
+    public JFrame getGameFrame() {
+        return gameFrame;
+    }
 
     private final JFrame gameFrame;
     private final GameHistoryPanel gameHistoryPanel;
@@ -33,12 +37,17 @@ public class Table extends Observable {
     public static boolean highlightLegalMoves;
     public MoveLog moveLog;
     private Move computerMove;
-
+    private State state;
     private boolean musicOn = true;
     AudioStream audioStream;
     AudioData audioData;
     ContinuousAudioDataStream audioLoop;
 
+    public JDialog getDialog() {
+        return dialog;
+    }
+
+    final JDialog dialog;
     private static Table INSTANCE = new Table();
 
     private Table(){
@@ -58,9 +67,8 @@ public class Table extends Observable {
         this.gameFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
-        this.gameFrame.setVisible(true);
-        try {
 
+        try {
             audioStream = new AudioStream(new FileInputStream("guitarup_full.wav"));
             audioData = audioStream.getData();
             audioLoop = new ContinuousAudioDataStream(audioData);
@@ -68,6 +76,18 @@ public class Table extends Observable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        dialog = new JDialog((Frame)null, "Boo");
+
+        JOptionPane op = new JOptionPane("Game paused", JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+        dialog.setUndecorated(true);
+        dialog.setLayout(new BorderLayout());
+        dialog.add(op);
+        dialog.pack();
+        dialog.setLocationRelativeTo(null);
+
+        this.gameFrame.setVisible(true);
+
     }
 
     public static Table getInstance(){
@@ -239,6 +259,14 @@ public class Table extends Observable {
     {
         setChanged();
         notifyObservers(gameSetup);
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
     private static class TableAIWatcher implements Observer{

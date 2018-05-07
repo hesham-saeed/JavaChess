@@ -1,29 +1,28 @@
 package com.chess.engine.pieces;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.chess.engine.Alliance;
 import com.chess.engine.board.*;
-import com.chess.engine.pieces.MoveStrategyForPieces.MoveStrategyFactory;
+import com.chess.engine.pieces.MoveStrategyForPieces.KingMoveStrategyPiece;
+import com.chess.engine.pieces.MoveStrategyForPieces.MoveStrategyContext;
 
 public class King extends Piece{
 
 	public King(final Alliance pieceAlliance,final int piecePostion) {
 
-		super(PieceType.KING, pieceAlliance, piecePostion, true, MoveStrategyFactory.getInstance().chooseMoveType(PieceType.KING));
+		super(PieceType.KING, pieceAlliance, piecePostion, true, new KingMoveStrategyPiece());
 	}
 
 	public King(final Alliance pieceAlliance,final int piecePostion, boolean isFirstMove) {
 
-		super(PieceType.KING, pieceAlliance, piecePostion, isFirstMove, MoveStrategyFactory.getInstance().chooseMoveType(PieceType.KING));
+		super(PieceType.KING, pieceAlliance, piecePostion, isFirstMove, new KingMoveStrategyPiece());
 	}
 
 	@Override
 	public List<Move> calculateLegalMoves(Board board) {
 
-		return moveStrategy.calculateLegalMoves(board, this);
+		return moveStrategy.excuteCalculateLegalMoves(board, this);
 
 	}
 

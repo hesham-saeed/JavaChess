@@ -8,7 +8,7 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.*;
 import com.chess.engine.pieces.AI.MoveStrategy;
 import com.chess.engine.pieces.MoveStrategyForPieces.MoveStrategyPiece;
-
+import com.chess.engine.pieces.MoveStrategyForPieces.MoveStrategyContext;
 
 public abstract class Piece implements Serializable {
 
@@ -17,7 +17,7 @@ public abstract class Piece implements Serializable {
     protected final Alliance pieceAlliance;
     private final boolean isFirstMove;
     private final int cachedHashCode;
-    protected final MoveStrategyPiece moveStrategy;
+    protected final MoveStrategyContext moveStrategy;
 
     Piece(final PieceType pieceType,
           final Alliance pieceAlliance,
@@ -30,7 +30,7 @@ public abstract class Piece implements Serializable {
         this.pieceType = pieceType;
         this.isFirstMove = isFirstMove;
         this.cachedHashCode = computeHashCode();
-        this.moveStrategy = moveStrategy;
+        this.moveStrategy = new MoveStrategyContext(moveStrategy);
     }
 
     private int computeHashCode() {

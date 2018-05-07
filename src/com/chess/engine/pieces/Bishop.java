@@ -2,31 +2,29 @@ package com.chess.engine.pieces;
 
 
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.chess.engine.*;
 import com.chess.engine.board.*;
-import com.chess.engine.pieces.AI.MoveStrategy;
-import com.chess.engine.pieces.MoveStrategyForPieces.MoveStrategyFactory;
+import com.chess.engine.pieces.MoveStrategyForPieces.BishopMoveStrategyPiece;
+import com.chess.engine.pieces.MoveStrategyForPieces.MoveStrategyContext;
 
 public class Bishop extends Piece{
 
 
 	public Bishop(Alliance pieceAlliance,  int piecePostion) {
-		super(PieceType.BISHOP, pieceAlliance, piecePostion, true, MoveStrategyFactory.getInstance().chooseMoveType(PieceType.BISHOP));
+		super(PieceType.BISHOP, pieceAlliance, piecePostion, true, new BishopMoveStrategyPiece());
 
 	}
 
 	public Bishop(Alliance pieceAlliance,  int piecePostion, boolean isFirstMove) {
-		super(PieceType.BISHOP, pieceAlliance, piecePostion, isFirstMove, MoveStrategyFactory.getInstance().chooseMoveType(PieceType.BISHOP));
+		super(PieceType.BISHOP, pieceAlliance, piecePostion, isFirstMove, new BishopMoveStrategyPiece());
 
 	}
 	@Override
 	public List<Move> calculateLegalMoves(final Board board) {
 
-		return moveStrategy.calculateLegalMoves(board, this);
+		return moveStrategy.excuteCalculateLegalMoves(board, this);
 	}
 	
 	@Override

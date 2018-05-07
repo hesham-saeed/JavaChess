@@ -208,7 +208,11 @@ public class Table extends Observable {
                 CareTaker careTaker = CareTaker.getInstance();
                 if (!careTaker.emptyMemento()){
                     chessBoard.getStateFromMemento(careTaker.getLastMemento());
+                    if (moveLog.size() > 0)
+                        moveLog.removeMove(moveLog.size()-1);
                     TilePanel.chessBoard = chessBoard;
+                    gameHistoryPanel.redo(chessBoard, moveLog);
+                    takenPiecesPanel.redo(moveLog);
                     boardPanel.drawBoard(chessBoard);
                 }
                 //BoardMemento b = CareTaker.getInstance().getLastMemento();

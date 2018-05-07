@@ -27,7 +27,9 @@ public class CareTaker {
 
     public BoardMemento getLastMemento(){
         if (mementoList.size() > 0 ){
-            return mementoList.get(mementoList.size()-1);
+            BoardMemento memento =  mementoList.get(mementoList.size()-1);
+            mementoList.remove(memento);
+            return memento;
         }
         return null;
     }

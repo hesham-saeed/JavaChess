@@ -1,59 +1,82 @@
 package com.chess.engine.gui;
 
-import com.chess.engine.board.Board;
-import com.chess.engine.board.BoardMemento;
-import com.chess.engine.board.CareTaker;
-import com.chess.engine.board.GameSaver;
+import com.chess.engine.board.*;
+import com.chess.engine.pieces.AI.MiniMax;
+import com.chess.engine.pieces.AI.MoveStrategy;
 import com.google.common.collect.Lists;
+import javafx.scene.control.Tab;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.concurrent.ExecutionException;
 
-public class Table {
-    public GameHistoryPanel getGameHistoryPanel() {
-        return gameHistoryPanel;
-    }
+public class Table extends Observable {
+
 
     public TakenPiecesPanel getTakenPiecesPanel() {
         return takenPiecesPanel;
     }
-
+    public GameHistoryPanel getGameHistoryPanel() { return gameHistoryPanel; }
     public BoardPanel getBoardPanel() {
         return boardPanel;
     }
 
     private final JFrame gameFrame;
-    private final GameHistoryPanel gameHistoryPanel;
-    private final TakenPiecesPanel takenPiecesPanel;
+    public final GameHistoryPanel gameHistoryPanel;
+    public final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
+    private final MoveLog moveLog;
+    private Move computerMove;
     Board chessBoard;
+    private final GameSetup gameSetup;
     public static BoardDirection boardDirection;
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(800,800);
     public static boolean highlightLegalMoves;
 
-    public Table(){
+
+    private static Table INSTANCE = new Table();
+
+    private Table(){
         this.gameFrame = new JFrame("Chess");
         final JMenuBar tableMenuBar = createTableMenuBar();
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         boardDirection=BoardDirection.NORMAL;
         chessBoard = Board.createStandardBoard();
+        this.moveLog = new MoveLog();
+        this.addObserver(new TableAIWatcher());
         this.gameHistoryPanel = new GameHistoryPanel();
         this.takenPiecesPanel = new TakenPiecesPanel();
         this.boardPanel = new BoardPanel(chessBoard);
+        this.gameSetup = new GameSetup(this.gameFrame, true);
         this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.setVisible(true);
     }
 
+    public static Table getInstance(){
+        return INSTANCE;
+    }
+
+    private Board getGameBoard(){
+        return this.chessBoard;
+    }
+
+    public GameSetup getGameSetup() {
+        return this.gameSetup;
+    }
+
     private JMenuBar createTableMenuBar(){
         final JMenuBar tableMenuBar = new JMenuBar();
         tableMenuBar.add(createFileMenu());
         tableMenuBar.add(createPreferencesMenu());
+        tableMenuBar.add(createOptionsMenu());
         return tableMenuBar;
     }
 
@@ -142,8 +165,6 @@ public class Table {
 
         preferencesMenu.add(toggleMusic);
 
-
-
         final JMenuItem undoActionMenuItem = new JMenuItem("Undo last move");
         undoActionMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -163,6 +184,107 @@ public class Table {
         return preferencesMenu;
     }
 
+    private JMenu createOptionsMenu() {
+
+        final JMenu optionsMenu = new JMenu("Options");
+        final JMenuItem setupGameMenuItem = new JMenuItem("Setup Game");
+        setupGameMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Table.getInstance().getGameSetup().promptUser();
+                Table.getInstance().setUpdate(Table.getInstance().getGameSetup());
+            }
+        });
+        optionsMenu.add(setupGameMenuItem);
+        return optionsMenu;
+    }
+
+    public void setUpdate(final GameSetup gameSetup)
+    {
+        setChanged();
+        notifyObservers(gameSetup);
+    }
+
+    private static class TableAIWatcher implements Observer{
+
+        @Override
+        public void update(Observable o, Object arg) {
+            if (Table.getInstance().getGameSetup().isAIPlayer(Table.getInstance().getGameBoard().currentPlayer())&&
+                !Table.getInstance().getGameBoard().currentPlayer().isInCheckMate() &&
+                !Table.getInstance().getGameBoard().currentPlayer().isInStaleMate()){
+                //create AI thread and execute work
+                System.out.println(Table.getInstance().getGameBoard().currentPlayer() + " is set to AI, thinking....");
+                final AIThink think = new AIThink();
+                think.execute();
+            }
+
+            if (Table.getInstance().getGameBoard().currentPlayer().isInCheckMate()){
+                System.out.println("Game Over: Player " + Table.getInstance().getGameBoard().currentPlayer() + " is in checkmate!");
+            }
+
+            if (Table.getInstance().getGameBoard().currentPlayer().isInStaleMate()){
+                System.out.println("Game Over: Player " + Table.getInstance().getGameBoard().currentPlayer() + " is in Stalemate!");
+            }
+        }
+    }
+
+    public void updateGameBoard(final Board board) {
+        this.chessBoard = board;
+    }
+
+    public void updateComputerMove(final Move move){
+        this.computerMove = move;
+    }
+
+    public void moveMadeUpdate(final Table.PlayerType playertype)
+    {
+        setChanged();
+        notifyObservers(playertype);
+    }
+
+    public MoveLog getMoveLog(){
+        return this.moveLog;
+    }
+
+    private static class AIThink extends SwingWorker<Move, String>{
+
+        private AIThink(){
+
+        }
+
+        @Override
+        protected Move doInBackground() throws Exception {
+
+            final MoveStrategy miniMax = new MiniMax(4);
+            final Move bestMove = miniMax.execute(Table.getInstance().getGameBoard());
+            return bestMove;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                final Move bestMove = get();
+
+                Table.getInstance().updateComputerMove(bestMove);
+                Table.getInstance().updateGameBoard(Table.getInstance().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard());
+                Table.getInstance().getMoveLog().addMove(bestMove);
+                Table.getInstance().getGameHistoryPanel().redo(Table.getInstance().getGameBoard(), Table.getInstance().getMoveLog());
+                Table.getInstance().getTakenPiecesPanel().redo(Table.getInstance().getMoveLog());
+                Table.getInstance().getBoardPanel().drawBoard(Table.getInstance().getGameBoard());
+                Table.getInstance().moveMadeUpdate(PlayerType.COMPUTER);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public enum PlayerType {
+        HUMAN,
+        COMPUTER
+    }
 
     public enum BoardDirection{
         NORMAL{

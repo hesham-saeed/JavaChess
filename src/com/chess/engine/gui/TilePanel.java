@@ -65,13 +65,12 @@ public class TilePanel extends JPanel {
                     if (humanMovedPiece == null) {
                         sourceTile = null;
                     }
-                }
-                else {
+                } else {
                     destinationTile = chessBoard.getTile(tileCoordinate);
                     //System.out.println("" + sourceTile.getTileCoordinate() + "," + destinationTile.getTileCoordinate());
 
                     final Move move = MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(),
-                                                             destinationTile.getTileCoordinate());
+                            destinationTile.getTileCoordinate());
 
                     final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
 
@@ -86,17 +85,18 @@ public class TilePanel extends JPanel {
                     humanMovedPiece = null;
 
                 }
+
+
                 SwingUtilities.invokeLater(new Runnable() {
-                    @Override
                     public void run() {
+
+                        Table.getInstance().moveMadeUpdate(Table.PlayerType.HUMAN);
+
                         Game.getInstance().redrawBoard(chessBoard);
                     }
                 });
             }
-
-
         }
-
         @Override
         public void mousePressed(MouseEvent e) {
 

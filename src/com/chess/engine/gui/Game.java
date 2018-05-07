@@ -7,12 +7,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Game {
+    private Table table;
     private boolean musicOn = true;
     AudioStream audioStream;
     AudioData audioData;
     ContinuousAudioDataStream audioLoop;
 
-    private Table table;
     private final MoveLog moveLog;
 
     private static Game sGame;
@@ -63,7 +63,7 @@ public class Game {
 
     public void initializeGame(){
         //chessBoard = Board.createStandardBoard();
-        table = new Table();
+        table = Table.getInstance();
         try {
 
             audioStream = new AudioStream(new FileInputStream("guitarup_full.wav"));

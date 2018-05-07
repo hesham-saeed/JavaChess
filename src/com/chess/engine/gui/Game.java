@@ -1,7 +1,10 @@
 package com.chess.engine.gui;
 
 import com.chess.engine.board.*;
-mport sun.audio.*;
+import sun.audio.AudioData;
+import sun.audio.AudioStream;
+import sun.audio.ContinuousAudioDataStream;
+import sun.audio.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;

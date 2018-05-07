@@ -91,4 +91,8 @@ public class BoardUtils {
         return ALGEBRAIC_NOTATION.get(coordinate);
     }
 
+    public static boolean isEndGame(Board chessBoard) {
+        return chessBoard.currentPlayer().isInCheckMate() ||
+                chessBoard.currentPlayer().isInStaleMate();
+    }
 }

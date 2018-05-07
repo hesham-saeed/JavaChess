@@ -22,15 +22,6 @@ import java.util.concurrent.ExecutionException;
 
 public class Table extends Observable {
 
-
-    public TakenPiecesPanel getTakenPiecesPanel() {
-        return takenPiecesPanel;
-    }
-    public GameHistoryPanel getGameHistoryPanel() { return gameHistoryPanel; }
-    public BoardPanel getBoardPanel() {
-        return boardPanel;
-    }
-
     private final JFrame gameFrame;
     private final GameHistoryPanel gameHistoryPanel;
     private final TakenPiecesPanel takenPiecesPanel;
@@ -83,7 +74,7 @@ public class Table extends Observable {
         return INSTANCE;
     }
 
-    private Board getGameBoard(){
+    public Board getGameBoard(){
         return this.chessBoard;
     }
 
@@ -93,6 +84,17 @@ public class Table extends Observable {
 
     public void setMoveLog(MoveLog moveLog){
         this.moveLog = moveLog;
+    }
+
+    public TakenPiecesPanel getTakenPiecesPanel() {
+        return takenPiecesPanel;
+    }
+
+    public GameHistoryPanel getGameHistoryPanel()
+    { return gameHistoryPanel; }
+
+    public BoardPanel getBoardPanel() {
+        return boardPanel;
     }
 
     private JMenuBar createTableMenuBar(){
@@ -128,7 +130,9 @@ public class Table extends Observable {
                 if (gameLoaded){
                     TilePanel.setChessBoard(chessBoard);
                     getBoardPanel().drawBoard(chessBoard);
-                    Table.getInstance().getGameHistoryPanel().redo(Table.getInstance().getGameBoard(), Table.getInstance().getMoveLog());
+                    Table.getInstance().getGameHistoryPanel().redo(Table.getInstance().getGameBoard(),
+                                                                   Table.getInstance().getMoveLog());
+
                     Table.getInstance().getTakenPiecesPanel().redo(Table.getInstance().getMoveLog());
                 } else {
                     JOptionPane.showMessageDialog(
@@ -136,13 +140,6 @@ public class Table extends Observable {
                             "Couldn't load game",
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                /*Board loadedBoard = GameSaver.loadGame();
-                if (loadedBoard != null)
-                    chessBoard = loadedBoard;
-                //chessBoard = GameSaver.loadGame();*/
-
-                //Game.getInstance().redrawBoard(chessBoard);
-
             }
         });
         fileMenu.add(loadGame);
@@ -215,7 +212,6 @@ public class Table extends Observable {
                     takenPiecesPanel.redo(moveLog);
                     boardPanel.drawBoard(chessBoard);
                 }
-                //BoardMemento b = CareTaker.getInstance().getLastMemento();
 
             }
         });
@@ -336,7 +332,7 @@ public class Table extends Observable {
                 final Move bestMove = get();
 
                 Table.getInstance().updateComputerMove(bestMove);
-                CareTaker.getInstance().add(Table.getInstance().chessBoard.saveMemento());
+                CareTaker.getInstance().add(Table.getInstance().getGameBoard().saveMemento());
                 Board newBoard = Table.getInstance().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard();
                 Table.getInstance().updateGameBoard(newBoard);
                 TilePanel.setChessBoard(Table.getInstance().getGameBoard());

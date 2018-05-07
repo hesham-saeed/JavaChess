@@ -4,7 +4,6 @@ import com.chess.engine.board.*;
 import com.chess.engine.pieces.AI.MiniMax;
 import com.chess.engine.pieces.AI.MoveStrategy;
 import com.google.common.collect.Lists;
-import javafx.scene.control.Tab;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,17 +26,16 @@ public class Table extends Observable {
     }
 
     private final JFrame gameFrame;
-    public final GameHistoryPanel gameHistoryPanel;
-    public final TakenPiecesPanel takenPiecesPanel;
+    private final GameHistoryPanel gameHistoryPanel;
+    private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
-    private final MoveLog moveLog;
-    private Move computerMove;
     Board chessBoard;
     private final GameSetup gameSetup;
     public static BoardDirection boardDirection;
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(800,800);
     public static boolean highlightLegalMoves;
-
+    public final MoveLog moveLog;
+    private Move computerMove;
 
     private static Table INSTANCE = new Table();
 

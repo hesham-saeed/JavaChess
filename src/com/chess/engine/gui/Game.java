@@ -1,7 +1,7 @@
 package com.chess.engine.gui;
 
 import com.chess.engine.board.*;
-import sun.audio.*;
+mport sun.audio.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;

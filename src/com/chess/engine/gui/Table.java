@@ -1,10 +1,12 @@
 package com.chess.engine.gui;
 
 import com.chess.engine.board.Board;
+import com.chess.engine.board.Move;
 import com.chess.engine.board.BoardMemento;
 import com.chess.engine.board.CareTaker;
 import com.chess.engine.board.GameSaver;
 import com.google.common.collect.Lists;
+import com.chess.engine.network.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +35,8 @@ public class Table {
     public static BoardDirection boardDirection;
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(800,800);
     public static boolean highlightLegalMoves;
+
+    public static NetworkConnection connection;
 
     public Table(){
         this.gameFrame = new JFrame("Chess");
@@ -161,6 +165,60 @@ public class Table {
         preferencesMenu.add(undoActionMenuItem);
 
         return preferencesMenu;
+    }
+
+
+
+    public void choosePlayerColor() {
+        Object[] options1 = { "Offline", "Black (Clinet)",
+                "White (Server)" };
+
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("Pick team color"));
+        JTextField textField = new JTextField(10);
+        panel.add(textField);
+
+        int result = JOptionPane.showOptionDialog(null, panel, "Start new game",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+                null, options1, null);
+    }
+
+
+    private Server createServer() {
+        return new Server(444, data -> {
+            // Below: Runs whenever data is revieved from the client.
+           /* Platform.runLater(() -> {
+                if (data instanceof Move)
+                {
+                    //Update the board
+                }
+            });*/
+        });
+    }
+
+    private Client createClient() {
+        // localhost IP address
+        return new Client("127.0.0.1", 444, data -> {
+            // Below: Runs whenever data is revieved from the server.
+            /*Platform.runLater(() -> {
+                if (data instanceof Move)
+                {
+                    //Update the board
+                }
+            });*/
+        });
+    }
+
+    public void stop() {
+        try {
+            connection.closeConnection();
+        }
+        catch (NullPointerException e) {
+            // Nothing to close. Connention never initialized and/or established
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

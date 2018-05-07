@@ -101,7 +101,7 @@ public class Pawn extends Piece{
 						(this.piecePosition - (this.pieceAlliance.getOppositeDirection()))) {
 					final Piece pieceOnCandidate = board.getEnPassantPawn();
 					if (this.pieceAlliance != pieceOnCandidate.getPieceAlliance()) {
-							legalMoves.add(new PawnAttackMove(board, this, candidateDestinationCoordinate, pieceOnCandidate));
+							legalMoves.add(new PawnEnPassantAttackMove(board, this, candidateDestinationCoordinate, pieceOnCandidate));
 					}
 				}
 			}

@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.chess.engine.Alliance;
 import com.chess.engine.board.*;
+import com.chess.engine.pieces.AI.MoveStrategy;
+import com.chess.engine.pieces.MoveStrategyForPieces.MoveStrategyPiece;
 
 
 public abstract class Piece implements Serializable {
@@ -15,17 +17,20 @@ public abstract class Piece implements Serializable {
     protected final Alliance pieceAlliance;
     private final boolean isFirstMove;
     private final int cachedHashCode;
+    protected final MoveStrategyPiece moveStrategy;
 
     Piece(final PieceType pieceType,
           final Alliance pieceAlliance,
           final int piecePosition,
-          final boolean isFirstMove){
+          final boolean isFirstMove,
+          MoveStrategyPiece moveStrategy){
 
         this.pieceAlliance = pieceAlliance;
         this.piecePosition = piecePosition;
         this.pieceType = pieceType;
         this.isFirstMove = isFirstMove;
         this.cachedHashCode = computeHashCode();
+        this.moveStrategy = moveStrategy;
     }
 
     private int computeHashCode() {

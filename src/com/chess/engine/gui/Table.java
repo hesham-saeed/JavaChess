@@ -44,6 +44,7 @@ public class Table extends Observable{
     ContinuousAudioDataStream audioLoop;
 
     public JDialog getDialog() {
+        //
         return dialog;
     }
 

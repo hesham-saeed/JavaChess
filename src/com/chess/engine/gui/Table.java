@@ -40,7 +40,7 @@ public class Table extends Observable {
     public static BoardDirection boardDirection;
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(800,800);
     public static boolean highlightLegalMoves;
-    public final MoveLog moveLog;
+    public MoveLog moveLog;
     private Move computerMove;
 
     private boolean musicOn = true;
@@ -91,6 +91,10 @@ public class Table extends Observable {
         return this.gameSetup;
     }
 
+    public void setMoveLog(MoveLog moveLog){
+        this.moveLog = moveLog;
+    }
+
     private JMenuBar createTableMenuBar(){
         final JMenuBar tableMenuBar = new JMenuBar();
         tableMenuBar.add(createFileMenu());
@@ -109,7 +113,7 @@ public class Table extends Observable {
         saveGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GameSaver.saveGame(chessBoard);
+                GameSaver.saveGame(chessBoard, getMoveLog());
 
             }
         });
@@ -120,12 +124,23 @@ public class Table extends Observable {
         loadGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Board loadedBoard = GameSaver.loadGame();
+                boolean gameLoaded = GameSaver.loadGame();
+                if (gameLoaded){
+                    TilePanel.setChessBoard(chessBoard);
+                    getBoardPanel().drawBoard(chessBoard);
+                    Table.getInstance().getGameHistoryPanel().redo(Table.getInstance().getGameBoard(), Table.getInstance().getMoveLog());
+                    Table.getInstance().getTakenPiecesPanel().redo(Table.getInstance().getMoveLog());
+                } else {
+                    JOptionPane.showMessageDialog(
+                            Table.getInstance().gameFrame,
+                            "Couldn't load game",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                /*Board loadedBoard = GameSaver.loadGame();
                 if (loadedBoard != null)
                     chessBoard = loadedBoard;
-                TilePanel.setChessBoard(chessBoard);
-                //chessBoard = GameSaver.loadGame();
-                getBoardPanel().drawBoard(chessBoard);
+                //chessBoard = GameSaver.loadGame();*/
+
                 //Game.getInstance().redrawBoard(chessBoard);
 
             }

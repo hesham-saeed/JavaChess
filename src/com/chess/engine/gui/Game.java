@@ -1,21 +1,18 @@
 package com.chess.engine.gui;
 
 import com.chess.engine.board.*;
-import sun.audio.AudioData;
-import sun.audio.AudioStream;
-import sun.audio.ContinuousAudioDataStream;
 import sun.audio.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Game {
-    private Table table;
     private boolean musicOn = true;
     AudioStream audioStream;
     AudioData audioData;
     ContinuousAudioDataStream audioLoop;
 
+    private Table table;
     private final MoveLog moveLog;
 
     private static Game sGame;

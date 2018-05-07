@@ -53,6 +53,7 @@ public class Table extends Observable {
         this.boardPanel = new BoardPanel(chessBoard);
         this.gameSetup = new GameSetup(this.gameFrame, true);
         this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
+        this.gameFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.setVisible(true);
@@ -100,7 +101,8 @@ public class Table extends Observable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Board loadedBoard = GameSaver.loadGame();
-                chessBoard = loadedBoard;
+                if (loadedBoard != null)
+                    chessBoard = loadedBoard;
                 TilePanel.setChessBoard(chessBoard);
                 //chessBoard = GameSaver.loadGame();
                 Game.getInstance().redrawBoard(chessBoard);
@@ -264,12 +266,23 @@ public class Table extends Observable {
                 final Move bestMove = get();
 
                 Table.getInstance().updateComputerMove(bestMove);
-                Table.getInstance().updateGameBoard(Table.getInstance().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard());
-                Table.getInstance().getMoveLog().addMove(bestMove);
-                Table.getInstance().getGameHistoryPanel().redo(Table.getInstance().getGameBoard(), Table.getInstance().getMoveLog());
-                Table.getInstance().getTakenPiecesPanel().redo(Table.getInstance().getMoveLog());
-                Table.getInstance().getBoardPanel().drawBoard(Table.getInstance().getGameBoard());
+                CareTaker.getInstance().add(Table.getInstance().chessBoard.saveMemento());
+                Board newBoard = Table.getInstance().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard();
+                Table.getInstance().updateGameBoard(newBoard);
+                TilePanel.setChessBoard(Table.getInstance().getGameBoard());
+                Game.getInstance().addMoveToLog(bestMove);
+                Game.getInstance().playMoveMusic();
+                Game.getInstance().redrawBoard(newBoard);
                 Table.getInstance().moveMadeUpdate(PlayerType.COMPUTER);
+                //Table.getInstance().getMoveLog().addMove(bestMove);
+                //Table.getInstance().getGameHistoryPanel().redo(Table.getInstance().getGameBoard(), Table.getInstance().getMoveLog());
+                //Table.getInstance().getTakenPiecesPanel().redo(Table.getInstance().getMoveLog());
+
+                //Table.getInstance().getBoardPanel().drawBoard(Table.getInstance().getGameBoard());
+
+
+
+
 
             } catch (InterruptedException e) {
                 e.printStackTrace();

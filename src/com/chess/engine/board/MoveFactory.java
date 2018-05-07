@@ -10,14 +10,14 @@ public class MoveFactory {
 
     public static Move createMove(final Board board, final int currentCoordinate, final int destinationCoordinate) {
 
-        for (int i=0;i<64;i++){
+        /*for (int i=0;i<64;i++){
             if (i%8 == 0)
                 System.out.println("");
             System.out.print(i +"\t");
         }
-        System.out.println("");
+        System.out.println("");*/
         for(final Move move : board.getAllLegalMoves()) {
-            System.out.println("comparing to: " + move.getCurrentCoordinate() + ", " +  move.getDestinationCoordinate());
+            //System.out.println("comparing to: " + move.getCurrentCoordinate() + ", " +  move.getDestinationCoordinate());
             if(move.getCurrentCoordinate() == currentCoordinate && move.getDestinationCoordinate() == destinationCoordinate) {
                 return move;
             }

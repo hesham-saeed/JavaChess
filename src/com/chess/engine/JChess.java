@@ -1,11 +1,11 @@
 package com.chess.engine;
 
-import com.chess.engine.gui.Game;
+import com.chess.engine.gui.Table;
 
 public class JChess {
 
     public static void main(String [] args){
-        Game game = Game.getInstance();
+        Table  table = Table.getInstance();
 
     }
     public static void test(){

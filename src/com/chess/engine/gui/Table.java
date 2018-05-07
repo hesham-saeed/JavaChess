@@ -4,11 +4,17 @@ import com.chess.engine.board.*;
 import com.chess.engine.pieces.AI.MiniMax;
 import com.chess.engine.pieces.AI.MoveStrategy;
 import com.google.common.collect.Lists;
+import sun.audio.AudioData;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+import sun.audio.ContinuousAudioDataStream;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -37,6 +43,11 @@ public class Table extends Observable {
     public final MoveLog moveLog;
     private Move computerMove;
 
+    private boolean musicOn = true;
+    AudioStream audioStream;
+    AudioData audioData;
+    ContinuousAudioDataStream audioLoop;
+
     private static Table INSTANCE = new Table();
 
     private Table(){
@@ -57,6 +68,15 @@ public class Table extends Observable {
         this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.setVisible(true);
+        try {
+
+            audioStream = new AudioStream(new FileInputStream("guitarup_full.wav"));
+            audioData = audioStream.getData();
+            audioLoop = new ContinuousAudioDataStream(audioData);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Table getInstance(){
@@ -105,7 +125,8 @@ public class Table extends Observable {
                     chessBoard = loadedBoard;
                 TilePanel.setChessBoard(chessBoard);
                 //chessBoard = GameSaver.loadGame();
-                Game.getInstance().redrawBoard(chessBoard);
+                getBoardPanel().drawBoard(chessBoard);
+                //Game.getInstance().redrawBoard(chessBoard);
 
             }
         });
@@ -159,7 +180,7 @@ public class Table extends Observable {
         toggleMusic.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                Game.getInstance().toggleMusic();
+                toggleMusic();
             }
         });
 
@@ -246,6 +267,36 @@ public class Table extends Observable {
         return this.moveLog;
     }
 
+    private class moveMusic implements Runnable{
+
+        @Override
+        public void run() {
+            try {
+                AudioStream audioStream = new AudioStream(new FileInputStream("move.wav"));
+                AudioPlayer.player.start(audioStream);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public void playMoveMusic(){
+        new Table.moveMusic().run();
+    }
+
+    public void toggleMusic() {
+        if (musicOn)
+            AudioPlayer.player.start(audioLoop);
+        else
+            AudioPlayer.player.stop(audioLoop);
+
+
+        musicOn = !musicOn;
+    }
+
+
     private static class AIThink extends SwingWorker<Move, String>{
 
         private AIThink(){
@@ -270,15 +321,13 @@ public class Table extends Observable {
                 Board newBoard = Table.getInstance().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard();
                 Table.getInstance().updateGameBoard(newBoard);
                 TilePanel.setChessBoard(Table.getInstance().getGameBoard());
-                Game.getInstance().addMoveToLog(bestMove);
-                Game.getInstance().playMoveMusic();
-                Game.getInstance().redrawBoard(newBoard);
+                Table.getInstance().playMoveMusic();
                 Table.getInstance().moveMadeUpdate(PlayerType.COMPUTER);
-                //Table.getInstance().getMoveLog().addMove(bestMove);
-                //Table.getInstance().getGameHistoryPanel().redo(Table.getInstance().getGameBoard(), Table.getInstance().getMoveLog());
-                //Table.getInstance().getTakenPiecesPanel().redo(Table.getInstance().getMoveLog());
+                Table.getInstance().getMoveLog().addMove(bestMove);
+                Table.getInstance().getGameHistoryPanel().redo(Table.getInstance().getGameBoard(), Table.getInstance().getMoveLog());
+                Table.getInstance().getTakenPiecesPanel().redo(Table.getInstance().getMoveLog());
 
-                //Table.getInstance().getBoardPanel().drawBoard(Table.getInstance().getGameBoard());
+                Table.getInstance().getBoardPanel().drawBoard(Table.getInstance().getGameBoard());
 
 
 
@@ -323,5 +372,7 @@ public class Table extends Observable {
         abstract java.util.List<TilePanel> traverse(final List<TilePanel > boardTiles);
         abstract BoardDirection opposite();
     }
+
+
 
 }

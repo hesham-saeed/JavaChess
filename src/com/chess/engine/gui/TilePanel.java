@@ -75,8 +75,8 @@ public class TilePanel extends JPanel {
                     final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
 
                     if (transition.getMoveStatus().isDone()) {
-                        Game.getInstance().addMoveToLog(move);
-                        Game.getInstance().playMoveMusic();
+                        Table.getInstance().moveLog.addMove(move);
+                        Table.getInstance().playMoveMusic();
                         CareTaker.getInstance().add(chessBoard.saveMemento());
                         chessBoard = transition.getTransitionBoard();
                     }
@@ -89,10 +89,24 @@ public class TilePanel extends JPanel {
 
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
+                        Table.getInstance().getGameHistoryPanel().redo(chessBoard, Table.getInstance().moveLog);
+                        //gameHistoryPanel.redo(chessBoard, moveLog);
+
+                        //takenPiecesPanel.redo(moveLog);
+                        Table.getInstance().getTakenPiecesPanel().redo(Table.getInstance().moveLog);
+
+                        //if (gameSetup.isAIPlayer(chessBoard.currentPlayer())) {
+                        //Table.get().moveMadeUpdate(PlayerType.HUMAN);
+                        Table.getInstance().setChessBoard(chessBoard);
 
                         Table.getInstance().moveMadeUpdate(Table.PlayerType.HUMAN);
+                        //}
 
-                        Game.getInstance().redrawBoard(chessBoard);
+                        boardPanel.drawBoard(chessBoard);
+
+                        //Table.getInstance().moveMadeUpdate(Table.PlayerType.HUMAN);
+
+                        //Game.getInstance().redrawBoard(chessBoard);
                     }
                 });
             }

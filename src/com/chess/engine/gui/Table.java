@@ -22,15 +22,6 @@ import java.util.concurrent.ExecutionException;
 
 public class Table extends Observable {
 
-
-    public TakenPiecesPanel getTakenPiecesPanel() {
-        return takenPiecesPanel;
-    }
-    public GameHistoryPanel getGameHistoryPanel() { return gameHistoryPanel; }
-    public BoardPanel getBoardPanel() {
-        return boardPanel;
-    }
-
     private final JFrame gameFrame;
     private final GameHistoryPanel gameHistoryPanel;
     private final TakenPiecesPanel takenPiecesPanel;
@@ -40,7 +31,7 @@ public class Table extends Observable {
     public static BoardDirection boardDirection;
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(800,800);
     public static boolean highlightLegalMoves;
-    public final MoveLog moveLog;
+    public MoveLog moveLog;
     private Move computerMove;
 
     private boolean musicOn = true;
@@ -83,12 +74,27 @@ public class Table extends Observable {
         return INSTANCE;
     }
 
-    private Board getGameBoard(){
+    public Board getGameBoard(){
         return this.chessBoard;
     }
 
     public GameSetup getGameSetup() {
         return this.gameSetup;
+    }
+
+    public void setMoveLog(MoveLog moveLog){
+        this.moveLog = moveLog;
+    }
+
+    public TakenPiecesPanel getTakenPiecesPanel() {
+        return takenPiecesPanel;
+    }
+
+    public GameHistoryPanel getGameHistoryPanel()
+    { return gameHistoryPanel; }
+
+    public BoardPanel getBoardPanel() {
+        return boardPanel;
     }
 
     private JMenuBar createTableMenuBar(){
@@ -109,7 +115,7 @@ public class Table extends Observable {
         saveGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GameSaver.saveGame(chessBoard);
+                GameSaver.saveGame(chessBoard, getMoveLog());
 
             }
         });
@@ -120,14 +126,20 @@ public class Table extends Observable {
         loadGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Board loadedBoard = GameSaver.loadGame();
-                if (loadedBoard != null)
-                    chessBoard = loadedBoard;
-                TilePanel.setChessBoard(chessBoard);
-                //chessBoard = GameSaver.loadGame();
-                getBoardPanel().drawBoard(chessBoard);
-                //Game.getInstance().redrawBoard(chessBoard);
+                boolean gameLoaded = GameSaver.loadGame();
+                if (gameLoaded){
+                    TilePanel.setChessBoard(chessBoard);
+                    getBoardPanel().drawBoard(chessBoard);
+                    Table.getInstance().getGameHistoryPanel().redo(Table.getInstance().getGameBoard(),
+                                                                   Table.getInstance().getMoveLog());
 
+                    Table.getInstance().getTakenPiecesPanel().redo(Table.getInstance().getMoveLog());
+                } else {
+                    JOptionPane.showMessageDialog(
+                            Table.getInstance().gameFrame,
+                            "Couldn't load game",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         fileMenu.add(loadGame);
@@ -193,10 +205,13 @@ public class Table extends Observable {
                 CareTaker careTaker = CareTaker.getInstance();
                 if (!careTaker.emptyMemento()){
                     chessBoard.getStateFromMemento(careTaker.getLastMemento());
+                    if (moveLog.size() > 0)
+                        moveLog.removeMove(moveLog.size()-1);
                     TilePanel.chessBoard = chessBoard;
+                    gameHistoryPanel.redo(chessBoard, moveLog);
+                    takenPiecesPanel.redo(moveLog);
                     boardPanel.drawBoard(chessBoard);
                 }
-                //BoardMemento b = CareTaker.getInstance().getLastMemento();
 
             }
         });
@@ -317,7 +332,7 @@ public class Table extends Observable {
                 final Move bestMove = get();
 
                 Table.getInstance().updateComputerMove(bestMove);
-                CareTaker.getInstance().add(Table.getInstance().chessBoard.saveMemento());
+                CareTaker.getInstance().add(Table.getInstance().getGameBoard().saveMemento());
                 Board newBoard = Table.getInstance().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard();
                 Table.getInstance().updateGameBoard(newBoard);
                 TilePanel.setChessBoard(Table.getInstance().getGameBoard());

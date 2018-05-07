@@ -58,6 +58,12 @@ public class TilePanel extends JPanel {
         @Override
         public void mouseClicked(MouseEvent e) {
 
+            if(Table.getInstance().getGameSetup().isAIPlayer(Table.getInstance().getGameBoard().currentPlayer()) ||
+                    BoardUtils.isEndGame(Table.getInstance().getGameBoard())) {
+
+                return;
+            }
+
             if (SwingUtilities.isLeftMouseButton(e)) {
                 if (sourceTile == null) {
                     sourceTile = chessBoard.getTile(tileCoordinate);

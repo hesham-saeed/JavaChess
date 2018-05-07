@@ -1,10 +1,11 @@
 package com.chess.engine.gui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import com.chess.engine.board.*;
 import java.util.List;
 
-public class MoveLog {
+public class MoveLog implements Serializable {
 
     private final List<Move> moves;
 

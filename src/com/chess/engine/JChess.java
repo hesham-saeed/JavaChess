@@ -1,8 +1,6 @@
 package com.chess.engine;
 
-import com.chess.engine.View.StartState;
-import com.chess.engine.View.StopState;
-import com.chess.engine.View.Table;
+import com.chess.engine.View.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

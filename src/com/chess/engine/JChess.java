@@ -1,15 +1,12 @@
 package com.chess.engine;
 
-import com.chess.engine.gui.StartState;
-import com.chess.engine.gui.StopState;
-import com.chess.engine.gui.Table;
+import com.chess.engine.View.StartState;
+import com.chess.engine.View.StopState;
+import com.chess.engine.View.Table;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.security.Key;
-import java.util.Scanner;
 
 public class JChess implements KeyListener {
     static int i = 1;
@@ -42,17 +39,6 @@ public class JChess implements KeyListener {
 
             }
         });
-
-/*
-        System.out.println(table.getState().toString());
-        StopState stopState = new StopState();
-        Scanner scanner = new Scanner(System.in);
-        while (true){
-            if (scanner.next() == "p"){
-                StartState startState = new StartState();
-                startState.doAction(table);
-            }
-        }*/
 
     }
     public static void test(){

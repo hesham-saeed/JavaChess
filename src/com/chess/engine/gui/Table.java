@@ -37,7 +37,7 @@ public class Table extends Observable{
     public static boolean highlightLegalMoves;
     public MoveLog moveLog;
     private Move computerMove;
-    private State state;
+    private State state = new StartState();
     private boolean musicOn = true;
     AudioStream audioStream;
     AudioData audioData;
@@ -272,28 +272,34 @@ public class Table extends Observable{
 
     public void setState(State state) {
         this.state = state;
+        setChanged();
+        notifyObservers(gameSetup);
     }
 
     private static class TableAIWatcher implements Observer{
 
         @Override
         public void update(Observable o, Object arg) {
-            if (Table.getInstance().getGameSetup().isAIPlayer(Table.getInstance().getGameBoard().currentPlayer())&&
-                !Table.getInstance().getGameBoard().currentPlayer().isInCheckMate() &&
-                !Table.getInstance().getGameBoard().currentPlayer().isInStaleMate()){
-                //create AI thread and execute work
-                System.out.println(Table.getInstance().getGameBoard().currentPlayer() + " is set to AI, thinking....");
-                final AIThink think = new AIThink();
-                think.execute();
+
+            if (Table.getInstance().getState() instanceof StartState){
+                if (Table.getInstance().getGameSetup().isAIPlayer(Table.getInstance().getGameBoard().currentPlayer())&&
+                        !Table.getInstance().getGameBoard().currentPlayer().isInCheckMate() &&
+                        !Table.getInstance().getGameBoard().currentPlayer().isInStaleMate()){
+                    //create AI thread and execute work
+                    System.out.println(Table.getInstance().getGameBoard().currentPlayer() + " is set to AI, thinking....");
+                    final AIThink think = new AIThink();
+                    think.execute();
+                }
+
+                if (Table.getInstance().getGameBoard().currentPlayer().isInCheckMate()){
+                    System.out.println("Game Over: Player " + Table.getInstance().getGameBoard().currentPlayer() + " is in checkmate!");
+                }
+
+                if (Table.getInstance().getGameBoard().currentPlayer().isInStaleMate()){
+                    System.out.println("Game Over: Player " + Table.getInstance().getGameBoard().currentPlayer() + " is in Stalemate!");
+                }
             }
 
-            if (Table.getInstance().getGameBoard().currentPlayer().isInCheckMate()){
-                System.out.println("Game Over: Player " + Table.getInstance().getGameBoard().currentPlayer() + " is in checkmate!");
-            }
-
-            if (Table.getInstance().getGameBoard().currentPlayer().isInStaleMate()){
-                System.out.println("Game Over: Player " + Table.getInstance().getGameBoard().currentPlayer() + " is in Stalemate!");
-            }
         }
     }
 
@@ -366,6 +372,8 @@ public class Table extends Observable{
 
                 Table.getInstance().updateComputerMove(bestMove);
                 CareTaker.getInstance().add(Table.getInstance().getGameBoard().saveMemento());
+                MoveCommand command = new MoveCommand(Table.getInstance().chessBoard.currentPlayer());
+                //command.exectue();
                 Board newBoard = Table.getInstance().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard();
                 Table.getInstance().updateGameBoard(newBoard);
                 TilePanel.setChessBoard(Table.getInstance().getGameBoard());

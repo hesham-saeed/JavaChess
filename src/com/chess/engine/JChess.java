@@ -10,7 +10,7 @@ import java.awt.event.KeyListener;
 
 public class JChess{
     static int i = 1;
-    static boolean paused = false;
+    static boolean paused = true;
     public static void main(String [] args){
         Table table = Table.getInstance();
 

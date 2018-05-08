@@ -4,9 +4,10 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
 import com.chess.engine.pieces.Piece;
 
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class MoveStrategyPiece {
+public abstract class MoveStrategyPiece implements Serializable {
 
 
     protected final int[] CANDIDATE_MOVE_VECTOR_COORDENATES;

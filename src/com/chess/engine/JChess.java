@@ -14,7 +14,6 @@ public class JChess implements KeyListener {
     public static void main(String [] args){
         Table  table = Table.getInstance();
 
-//
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         manager.addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
@@ -58,7 +57,7 @@ public class JChess implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_P){
-            System.out.println("hahahahahahahahahha");
+
         }
     }
 

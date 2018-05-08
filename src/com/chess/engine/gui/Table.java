@@ -87,6 +87,10 @@ public class Table extends Observable{
         dialog.pack();
         dialog.setLocationRelativeTo(null);
 
+
+
+
+
         this.gameFrame.setVisible(true);
 
     }

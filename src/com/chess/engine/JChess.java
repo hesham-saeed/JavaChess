@@ -1,16 +1,18 @@
 package com.chess.engine;
 
-import com.chess.engine.View.*;
+import com.chess.engine.gui.StartState;
+import com.chess.engine.gui.StopState;
+import com.chess.engine.gui.Table;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class JChess implements KeyListener {
+public class JChess{
     static int i = 1;
     static boolean paused = false;
     public static void main(String [] args){
-        Table  table = Table.getInstance();
+        Table table = Table.getInstance();
 
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         manager.addKeyEventDispatcher(new KeyEventDispatcher() {
@@ -38,29 +40,6 @@ public class JChess implements KeyListener {
         });
 
     }
-    public static void test(){
 
-    }
 
-    public static void test2(){
-
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        int keyCode = e.getKeyCode();
-        if (keyCode == KeyEvent.VK_P){
-
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
 }
